@@ -12,9 +12,9 @@ import (
 )
 
 type Data struct {
-	Type        string
-	Name        string
-	Description string
+	Type        string `json:"Type,omitempty"`
+	Name        string `json:"Name,omitempty"`
+	Description string `json:"Description,omitempty"`
 }
 
 type FunctionData struct {
