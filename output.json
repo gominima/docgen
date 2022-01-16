@@ -1,0 +1,271 @@
+{
+	"Meta": {
+		"Generator": "1",
+		"Format": "1",
+		"Date": "2022-01-16 05:05:59.613852935 +0000 UTC m=+0.000294365"
+	},
+	"Functions": [
+		{
+			"Name": "func GetFiles(root string) ([]string, error)",
+			"Description": "Get all files ending in .go from a directory, recursively",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[root]",
+					"Description": "The root directory"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseDescription(data string) string",
+			"Description": "Parse the description of a comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[data]",
+					"Description": "The comment"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseParam(data string) Data",
+			"Description": "Parse the parameter of a function comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[data]",
+					"Description": "The comment"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseProperty(data string) Data",
+			"Description": "Parse the property of a structure comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[data]",
+					"Description": "The comment"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseReturn(data string) Data",
+			"Description": "Parse the return value of a return comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[data]",
+					"Description": "The comment"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseStructure(line string, StructureDocs StructureData) StructureData",
+			"Description": "Parse a single line of a structure comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[line]",
+					"Description": "The line of comment"
+				},
+				{
+					"Type": "{StructureData}",
+					"Name": "[StructureDocs]",
+					"Description": "The Structure Docs"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func ParseFunction(line string, FunctionDocs FunctionData) FunctionData",
+			"Description": "Parse a single line of a function comment",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[line]",
+					"Description": "The line of comment"
+				},
+				{
+					"Type": "{FunctionData}",
+					"Name": "[FunctionDocs]",
+					"Description": "The Function Docs"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "func Example(name string) string",
+			"Description": "The example function",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[name]",
+					"Description": "The name to return"
+				}
+			],
+			"Returns": {
+				"Type": "{string}"
+			}
+		},
+		{
+			"Name": "func ExampleTwo(number int) int",
+			"Description": "The example function",
+			"Parameters": [
+				{
+					"Type": "{int}",
+					"Name": "[number]",
+					"Description": "The number to return"
+				}
+			],
+			"Returns": {
+				"Type": "{int}"
+			}
+		},
+		{
+			"Name": "func ExampleThree(bytes []byte) []byte",
+			"Description": "The example function",
+			"Parameters": [
+				{
+					"Type": "{[]byte}",
+					"Name": "[bytes]",
+					"Description": "The bytes to return"
+				}
+			],
+			"Returns": {
+				"Type": "{[]byte}"
+			}
+		},
+		{
+			"Name": "func ExampleFour(name string, money int) ExampleStructure",
+			"Description": "The example function that returns the example structure",
+			"Parameters": [
+				{
+					"Type": "{string}",
+					"Name": "[name]",
+					"Description": "The name of the structure"
+				},
+				{
+					"Type": "{int}",
+					"Name": "[money]",
+					"Description": "The money of the structure"
+				}
+			],
+			"Returns": {
+				"Type": "{ExampleStructure}"
+			}
+		}
+	],
+	"Structures": [
+		{
+			"Name": "type Data struct",
+			"Description": "The generic data structure extended by other documentation structures",
+			"Properties": [
+				{
+					"Type": "{string}",
+					"Name": "[Type]",
+					"Description": "The type of the structure"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Name]",
+					"Description": "The Name of the structure"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Description]",
+					"Description": "The Description of the structure"
+				}
+			]
+		},
+		{
+			"Name": "type FunctionData struct",
+			"Description": "The function data structure used for functions",
+			"Properties": [
+				{
+					"Type": "{string}",
+					"Name": "[Name]",
+					"Description": "The Name of the function"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Description]",
+					"Description": "The Description of the function"
+				},
+				{
+					"Type": "{[]Data}",
+					"Name": "[Parameters]",
+					"Description": "The Parameters of the function"
+				},
+				{
+					"Type": "{Data}",
+					"Name": "[Returns]",
+					"Description": "The Return value of the function"
+				}
+			]
+		},
+		{
+			"Name": "type StructureData struct",
+			"Description": "The structure data structure used for structures",
+			"Properties": [
+				{
+					"Type": "{string}",
+					"Name": "[Name]",
+					"Description": "The Name of the structure"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Description]",
+					"Description": "The Description of the structure"
+				},
+				{
+					"Type": "{[]Data}",
+					"Name": "[Properties]",
+					"Description": "The properties of the structure"
+				}
+			]
+		},
+		{
+			"Name": "type Meta struct",
+			"Description": "The general meta information of the documentation",
+			"Properties": [
+				{
+					"Type": "{string}",
+					"Name": "[Generator]",
+					"Description": "The Name of the structure"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Format]",
+					"Description": "The Description of the structure"
+				},
+				{
+					"Type": "{string}",
+					"Name": "[Date]",
+					"Description": "The properties of the structure"
+				}
+			]
+		},
+		{
+			"Name": "type ExampleStructure struct",
+			"Description": "The example structure",
+			"Properties": [
+				{
+					"Type": "{string}",
+					"Name": "[name]",
+					"Description": "The name of the structure"
+				},
+				{
+					"Type": "{int}",
+					"Name": "[money]",
+					"Description": "The money of the structure"
+				}
+			]
+		}
+	]
+}

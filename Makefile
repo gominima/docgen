@@ -11,7 +11,7 @@ build:
 
 test:
 	@echo "Testing..."
-	./docgen tests/test.go
+	./docgen .
 
 clean:
 	@echo "Cleaning up..."

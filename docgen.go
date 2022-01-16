@@ -6,45 +6,98 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
 )
 
+/**
+	@info The generic data structure extended by other documentation structures
+	@property {string} [Type] The type of the structure
+	@property {string} [Name] The Name of the structure
+	@property {string} [Description] The Description of the structure
+*/
 type Data struct {
 	Type        string `json:"Type,omitempty"`
 	Name        string `json:"Name,omitempty"`
 	Description string `json:"Description,omitempty"`
 }
-
+/**
+	@info The function data structure used for functions
+	@property {string} [Name] The Name of the function
+	@property {string} [Description] The Description of the function
+	@property {[]Data} [Parameters] The Parameters of the function
+	@property {Data} [Returns] The Return value of the function
+*/
 type FunctionData struct {
-	Function   string
-	Parameters []Data
-	Returns    Data
+	Name        string `json:"Name,omitempty"`
+	Description string `json:"Description,omitempty"`
+	Parameters  []Data
+	Returns     Data
 }
-
+/**
+	@info The structure data structure used for structures
+	@property {string} [Name] The Name of the structure
+	@property {string} [Description] The Description of the structure
+	@property {[]Data} [Properties] The properties of the structure
+*/
 type StructureData struct {
-	Structure  string
-	Properties []Data
+	Name        string `json:"Name,omitempty"`
+	Description string `json:"Description,omitempty"`
+	Properties  []Data `json:"Properties,omitempty"`
 }
-
+/**
+	@info The general meta information of the documentation
+	@property {string} [Generator] The Name of the structure
+	@property {string} [Format] The Description of the structure
+	@property {string} [Date] The properties of the structure
+*/
 type Meta struct {
-	Generator string
-	Format    string
-	Date      string
+	Generator string `json:"Generator,omitempty"`
+	Format    string `json:"Format,omitempty"`
+	Date      string `json:"Date,omitempty"`
 }
 
 type DocgenData struct {
 	Meta       Meta
-	Functions  []FunctionData
-	Structures []StructureData
+	Functions  []FunctionData `json:"Functions,omitempty"`
+	Structures []StructureData `json:"Structures,omitempty"`
 }
 
+var DocsMatcher = regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
 var TypeMatcher = regexp.MustCompile(`{.*?}`)
-var NameMatcher = regexp.MustCompile(`\[[a-z]{1,}\]`)
-var FuncMatcher = regexp.MustCompile(`func.*`)
-var StructureMatcher = regexp.MustCompile(`type.*`)
-
+var NameMatcher = regexp.MustCompile(`\[[a-zA-Z]{1,}\]`)
+var FuncMatcher = regexp.MustCompile(`func.*{`)
+var StructureMatcher = regexp.MustCompile(`type.*{`)
+var DescriptionMatcher = regexp.MustCompile(`@info.*`)
+/**
+	@info Get all files ending in .go from a directory, recursively
+	@param {string} [root] The root directory
+*/
+func GetFiles(root string) ([]string, error) {
+    var files []string
+    err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+        if !info.IsDir() && strings.HasSuffix(info.Name(), "go") {
+            files = append(files, path)
+        }
+        return nil
+    })
+    return files, err
+}
+/**
+	@info Parse the description of a comment
+	@param {string} [data] The comment
+*/
+func ParseDescription(data string) string {
+	description := DescriptionMatcher.FindAllString(data, -1)[0]
+	description = strings.TrimSpace(strings.Replace(description, "@info", "", 1))
+	return description
+}
+/**
+	@info Parse the parameter of a function comment
+	@param {string} [data] The comment
+*/
 func ParseParam(data string) Data {
 	data = strings.Replace(data, "@param", "", 1)
 	Type := TypeMatcher.FindAllString(data, -1)[0]
@@ -56,7 +109,10 @@ func ParseParam(data string) Data {
 	return Data{Type: Type,
 		Name: Name, Description: Description}
 }
-
+/**
+	@info Parse the property of a structure comment
+	@param {string} [data] The comment
+*/
 func ParseProperty(data string) Data {
 	data = strings.Replace(data, "@property", "", 1)
 	Type := TypeMatcher.FindAllString(data, -1)[0]
@@ -68,7 +124,10 @@ func ParseProperty(data string) Data {
 	return Data{Type: Type,
 		Name: Name, Description: Description}
 }
-
+/**
+	@info Parse the return value of a return comment
+	@param {string} [data] The comment
+*/
 func ParseReturn(data string) Data {
 	data = strings.Replace(data, "@returns", "", 1)
 	Type := TypeMatcher.FindAllString(data, -1)[0]
@@ -77,43 +136,56 @@ func ParseReturn(data string) Data {
 	Description := strings.TrimSpace(data)
 	return Data{Type: Type, Description: Description}
 }
-
-func ParseStructure(line string, doc StructureData) StructureData {
+/**
+	@info Parse a single line of a structure comment
+	@param {string} [line] The line of comment
+	@param {StructureData} [StructureDocs] The Structure Docs
+*/
+func ParseStructure(line string, StructureDocs StructureData) StructureData {
 	line = strings.TrimSpace(line)
 	parsed := Data{}
 	if strings.HasPrefix(line, "@property") {
 		parsed = ParseProperty(line)
-		doc.Properties = append(doc.Properties, parsed)
+		StructureDocs.Properties = append(StructureDocs.Properties, parsed)
 	}
-	return doc
+	return StructureDocs
 }
-
-func ParseFunction(line string, doc FunctionData) FunctionData {
+/**
+	@info Parse a single line of a function comment
+	@param {string} [line] The line of comment
+	@param {FunctionData} [FunctionDocs] The Function Docs
+*/
+func ParseFunction(line string, FunctionDocs FunctionData) FunctionData {
 	line = strings.TrimSpace(line)
 	parsed := Data{}
 	if strings.HasPrefix(line, "@param") {
 		parsed = ParseParam(line)
-		doc.Parameters = append(doc.Parameters, parsed)
+		FunctionDocs.Parameters = append(FunctionDocs.Parameters, parsed)
 	} else if strings.HasPrefix(line, "@returns") {
 		parsed = ParseReturn(line)
-		doc.Returns = parsed
+		FunctionDocs.Returns = parsed
 	}
-	return doc
+	return FunctionDocs
 }
 
 func main() {
 	DocJson := DocgenData{Meta: Meta{Generator: "1",
 		Format: "1",
 		Date:   time.Now().String()}}
-	args := os.Args[1:]
-	matcher := regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
+	args := os.Args[1]
+
+	files, err := GetFiles(args)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if len(args) > 0 {
-		for _, file := range args {
+		for _, file := range files {
 			data, err := os.Open(file)
 
 			if err != nil {
-				log.Panic(err)
+				log.Fatal(err)
 			}
 
 			defer data.Close()
@@ -121,26 +193,27 @@ func main() {
 			output, err := io.ReadAll(data)
 
 			if err != nil {
-				log.Panic(err)
+				log.Fatal(err)
 			}
 
 			content := string(output)
 
-			matches := matcher.FindAllString(content, -1)
+			matches := DocsMatcher.FindAllString(content, -1)
 
 			for _, data := range matches {
 				lines := strings.Split(data, "\n")
-				object := ""
 				if FuncMatcher.MatchString(data) {
-					object = strings.ReplaceAll(FuncMatcher.FindAllString(data, -1)[0], "{", "")
-					parsed := FunctionData{Function: strings.TrimSpace(object)}
+					object := strings.TrimSpace(strings.ReplaceAll(FuncMatcher.FindAllString(data, -1)[0], "{", ""))
+					description := ParseDescription(data)
+					parsed := FunctionData{Name: object, Description: description}
 					for _, line := range lines {
 						parsed = ParseFunction(line, parsed)
 					}
 					DocJson.Functions = append(DocJson.Functions, parsed)
 				} else if StructureMatcher.MatchString(data) {
-					object = strings.ReplaceAll(StructureMatcher.FindAllString(data, -1)[0], "{", "")
-					parsed := StructureData{Structure: strings.TrimSpace(object)}
+					object := strings.TrimSpace(strings.ReplaceAll(StructureMatcher.FindAllString(data, -1)[0], "{", ""))
+					description := ParseDescription(data)
+					parsed := StructureData{Name: object, Description: description}
 					for _, line := range lines {
 						parsed = ParseStructure(line, parsed)
 					}
