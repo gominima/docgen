@@ -35,6 +35,7 @@ type FunctionData struct {
 	Name        string `json:"Name,omitempty"`
 	Line		string `json:"Line,omitempty"`
 	Description string `json:"Description,omitempty"`
+	Example     string `json:"Example,omitempty"`
 	Parameters  []Data `json:"Parameters,omitempty"`
 	Returns     Data   `json:"Returns,omitempty"`
 }
@@ -49,6 +50,7 @@ type StructureData struct {
 	Name        string `json:"Name,omitempty"`
 	Line		string `json:"Line,omitempty"`
 	Description string `json:"Description,omitempty"`
+	Functions  []FunctionData  `json:"Functions,omitempty"`
 	Properties  []Data `json:"Properties,omitempty"`
 }
 
@@ -76,14 +78,18 @@ type DocgenData struct {
 	Structures []StructureData `json:"Structures,omitempty"`
 }
 
-var DocsMatcher = regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
-var TypeMatcher = regexp.MustCompile(`{.*?}`)
-var NameMatcher = regexp.MustCompile(`\[[a-zA-Z]{1,}\]`)
-var FuncMatcher = regexp.MustCompile(`func.*{`)
-var FuncNameMatcher = regexp.MustCompile(`func.([a-zA-z]*)+.*`)
-var StructureMatcher = regexp.MustCompile(`type.*{`)
-var StructureNameMatcher = regexp.MustCompile(`type.([a-zA-z]*)+.*`)
-var DescriptionMatcher = regexp.MustCompile(`@info.*`)
+var (
+DocsMatcher = regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
+TypeMatcher = regexp.MustCompile(`{.*?}`)
+NameMatcher = regexp.MustCompile(`\[[a-zA-Z]{1,}\]`)
+FuncMatcher = regexp.MustCompile(`func.*{`)
+FuncNameMatcher = regexp.MustCompile(`func.([a-zA-z]*)+.*`)
+StructureFuncNameMatcher = regexp.MustCompile(`func\s\([a-zA-Z]*\s\*?([a-zA-Z]*)\)\s[a-zA-z]*.*{`)
+StructureMatcher = regexp.MustCompile(`type.*{`)
+StructureNameMatcher = regexp.MustCompile(`type.([a-zA-z]*)+.*`)
+DescriptionMatcher = regexp.MustCompile(`@info.*`)
+ExampleMatcher = regexp.MustCompile(`@example\s\x60{3,}\n([\s\S]*)\x60{3,}`)
+)
 
 /**
 	@info Get all files ending in .go from a directory, recursively
@@ -105,7 +111,7 @@ func GetFiles(root string) ([]string, error) {
 	@param {string} [data] The comment
 */
 func ParseDescription(data string) string {
-	description := DescriptionMatcher.FindAllString(data, -1)[0]
+	description := DescriptionMatcher.FindAllString(data, -1)[len(DescriptionMatcher.FindAllString(data, -1)) - 1]
 	description = strings.TrimSpace(strings.Replace(description, "@info", "", 1))
 	return description
 }
@@ -116,10 +122,10 @@ func ParseDescription(data string) string {
 */
 func ParseParam(data string) Data {
 	data = strings.Replace(data, "@param", "", 1)
-	Type := TypeMatcher.FindAllString(data, -1)[0]
+	Type := TypeMatcher.FindAllString(data, -1)[len(TypeMatcher.FindAllString(data, -1)) - 1]
 	data = strings.ReplaceAll(data, Type, "")
 	Type = Type[1 : len(Type)-1]
-	Name := NameMatcher.FindAllString(data, -1)[0]
+	Name := NameMatcher.FindAllString(data, -1)[len(NameMatcher.FindAllString(data, -1)) - 1]
 	data = strings.ReplaceAll(data, Name, "")
 	Name = Name[1 : len(Name)-1]
 	Description := strings.TrimSpace(data)
@@ -128,15 +134,37 @@ func ParseParam(data string) Data {
 }
 
 /**
+	@info Parse the example of a function comment
+	@param {string} [data] The comment
+	@example ```
+		package main
+
+		import (
+			"fmt"
+		)
+
+		func main() {
+			fmt.Println("Hello world!")
+		}
+	```
+*/
+func ParseExample(data string) string {
+	if ExampleMatcher.MatchString(data) {
+		return ExampleMatcher.FindAllStringSubmatch(data, -1)[len(ExampleMatcher.FindAllStringSubmatch(data, -1)) - 1][1] 
+	}
+	return ""
+}
+
+/**
 	@info Parse the property of a structure comment
 	@param {string} [data] The comment
 */
 func ParseProperty(data string) Data {
 	data = strings.Replace(data, "@property", "", 1)
-	Type := TypeMatcher.FindAllString(data, -1)[0]
+	Type := TypeMatcher.FindAllString(data, -1)[len(TypeMatcher.FindAllString(data, -1)) - 1]
 	data = strings.ReplaceAll(data, Type, "")
 	Type = Type[1 : len(Type)-1]
-	Name := NameMatcher.FindAllString(data, -1)[0]
+	Name := NameMatcher.FindAllString(data, -1)[len(NameMatcher.FindAllString(data, -1)) - 1]
 	data = strings.ReplaceAll(data, Name, "")
 	Name = Name[1 : len(Name)-1]
 	Description := strings.TrimSpace(data)
@@ -150,7 +178,7 @@ func ParseProperty(data string) Data {
 */
 func ParseReturn(data string) Data {
 	data = strings.Replace(data, "@returns", "", 1)
-	Type := TypeMatcher.FindAllString(data, -1)[0]
+	Type := TypeMatcher.FindAllString(data, -1)[len(TypeMatcher.FindAllString(data, -1)) - 1]
 	data = strings.ReplaceAll(data, Type, "")
 	Type = Type[1 : len(Type)-1]
 	Description := strings.TrimSpace(data)
@@ -225,17 +253,31 @@ func main() {
 			for _, data := range matches {
 				lines := strings.Split(data, "\n")
 				if FuncMatcher.MatchString(data) {
-					line := strings.TrimSpace(strings.ReplaceAll(FuncMatcher.FindAllString(data, -1)[0], "{", ""))
-					name := FuncNameMatcher.FindAllStringSubmatch(line, -1)[0][1]
+					line := strings.TrimSpace(strings.ReplaceAll(FuncMatcher.FindAllString(data, -1)[len(FuncMatcher.FindAllString(data, -1)) - 1], "{", ""))
+					name := FuncNameMatcher.FindAllStringSubmatch(line, -1)[len(FuncNameMatcher.FindAllStringSubmatch(line, -1)) - 1][1]
 					description := ParseDescription(data)
-					parsed := FunctionData{Name: name, Line: line, Description: description}
+					example := ParseExample(data)
+					if StructureFuncNameMatcher.MatchString(data) {
+						name = StructureFuncNameMatcher.FindAllStringSubmatch(data, -1)[len(StructureFuncNameMatcher.FindAllStringSubmatch(data, -1)) -1 ][1]
+						parsed := FunctionData{Name: name, Line: line, Description: description, Example: example}
+						for _, line := range lines {
+							parsed = ParseFunction(line, parsed)
+						}
+						for i := range DocJson.Structures {
+							if DocJson.Structures[i].Name == name {
+								DocJson.Structures[i].Functions = append(DocJson.Structures[i].Functions, parsed)
+							}
+						}
+						continue
+					}
+					parsed := FunctionData{Name: name, Line: line, Description: description, Example: example}
 					for _, line := range lines {
 						parsed = ParseFunction(line, parsed)
 					}
 					DocJson.Functions = append(DocJson.Functions, parsed)
 				} else if StructureMatcher.MatchString(data) {
-					line := strings.TrimSpace(strings.ReplaceAll(StructureMatcher.FindAllString(data, -1)[0], "{", ""))
-					name := StructureNameMatcher.FindAllStringSubmatch(line, -1)[0][1]
+					line := strings.TrimSpace(strings.ReplaceAll(StructureMatcher.FindAllString(data, -1)[len(StructureMatcher.FindAllString(data, -1)) - 1], "{", ""))
+					name := StructureNameMatcher.FindAllStringSubmatch(line, -1)[len(StructureNameMatcher.FindAllStringSubmatch(line, -1)) - 1][1]
 					description := ParseDescription(data)
 					parsed := StructureData{Name: name, Line: line, Description: description}
 					for _, line := range lines {

@@ -2,7 +2,7 @@
 	"Meta": {
 		"Generator": "1",
 		"Format": "1",
-		"Date": "2022-01-19 07:02:40.452219301 +0000 UTC m=+0.000145421"
+		"Date": "2022-01-20 08:49:54.724637265 +0000 UTC m=+0.000159077"
 	},
 	"Functions": [
 		{
@@ -35,6 +35,20 @@
 			"Name": "ParseParam",
 			"Line": "func ParseParam(data string) Data",
 			"Description": "Parse the parameter of a function comment",
+			"Parameters": [
+				{
+					"Type": "string",
+					"Name": "data",
+					"Description": "The comment"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "ParseExample",
+			"Line": "func ParseExample(data string) string",
+			"Description": "Parse the example of a function comment",
+			"Example": "\t\tpackage main\n\n\t\timport (\n\t\t\t\"fmt\"\n\t\t)\n\n\t\tfunc main() {\n\t\t\tfmt.Println(\"Hello world!\")\n\t\t}\n\t",
 			"Parameters": [
 				{
 					"Type": "string",
