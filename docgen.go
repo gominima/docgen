@@ -222,7 +222,17 @@ func main() {
 	DocJson := DocgenData{Meta: Meta{Generator: "1",
 		Format: "1",
 		Date:   time.Now().String()}}
-	args := os.Args[1]
+	
+	args := "."
+	outFile := "output.json"
+
+	if len(os.Args) > 1 {
+		args = os.Args[1]
+	}
+	
+	if len(os.Args) > 2 {
+		outFile = os.Args[2]
+	}
 
 	files, err := GetFiles(args)
 
@@ -287,7 +297,7 @@ func main() {
 				}
 			}
 			file, _ := json.MarshalIndent(DocJson, "", "\t")
-			_ = ioutil.WriteFile("output.json", file, 0644)
+			_ = ioutil.WriteFile(outFile, file, 0644)
 		}
 	}
 }
