@@ -81,7 +81,7 @@ type DocgenData struct {
 var (
 DocsMatcher = regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
 TypeMatcher = regexp.MustCompile(`{.*?}`)
-NameMatcher = regexp.MustCompile(`\[[a-zA-Z]{1,}\]`)
+NameMatcher = regexp.MustCompile(`\[[a-zA-Z.]{1,}\]`)
 FuncMatcher = regexp.MustCompile(`func.*{`)
 FuncNameMatcher = regexp.MustCompile(`func.([a-zA-z]*)+.*`)
 StructureFuncNameMatcher = regexp.MustCompile(`func\s\([a-zA-Z]*\s\*?([a-zA-Z]*)\)\s[a-zA-z]*.*{`)
