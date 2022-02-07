@@ -81,7 +81,7 @@ type DocgenData struct {
 var (
 DocsMatcher = regexp.MustCompile(`\/\*[\s\S]*?\*\/[\r\n]+([^\r\n]+)`)
 TypeMatcher = regexp.MustCompile(`{.*?}`)
-NameMatcher = regexp.MustCompile(`\[[a-zA-Z]{1,}\]`)
+NameMatcher = regexp.MustCompile(`\[[a-zA-Z.]{1,}\]`)
 FuncMatcher = regexp.MustCompile(`func.*{`)
 FuncNameMatcher = regexp.MustCompile(`func.([a-zA-z]*)+.*`)
 StructureFuncNameMatcher = regexp.MustCompile(`func\s\([a-zA-Z]*\s\*?[a-zA-Z]*\)\s([a-zA-z]*).*{`)
@@ -222,7 +222,17 @@ func main() {
 	DocJson := DocgenData{Meta: Meta{Generator: "1",
 		Format: "1",
 		Date:   time.Now().String()}}
-	args := os.Args[1]
+	
+	args := "."
+	outFile := "output.json"
+
+	if len(os.Args) > 1 {
+		args = os.Args[1]
+	}
+	
+	if len(os.Args) > 2 {
+		outFile = os.Args[2]
+	}
 
 	files, err := GetFiles(args)
 
@@ -287,7 +297,7 @@ func main() {
 				}
 			}
 			file, _ := json.MarshalIndent(DocJson, "", "\t")
-			_ = ioutil.WriteFile("output.json", file, 0644)
+			_ = ioutil.WriteFile(outFile, file, 0644)
 		}
 	}
 }
