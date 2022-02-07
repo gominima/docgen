@@ -129,8 +129,7 @@ func ParseParam(data string) Data {
 	data = strings.ReplaceAll(data, Name, "")
 	Name = Name[1 : len(Name)-1]
 	Description := strings.TrimSpace(data)
-	return Data{Type: Type,
-		Name: Name, Description: Description}
+	return Data{Name: Name, Type: Type, Description: Description}
 }
 
 /**
@@ -168,8 +167,7 @@ func ParseProperty(data string) Data {
 	data = strings.ReplaceAll(data, Name, "")
 	Name = Name[1 : len(Name)-1]
 	Description := strings.TrimSpace(data)
-	return Data{Type: Type,
-		Name: Name, Description: Description}
+	return Data{Name: Name, Type: Type, Description: Description}
 }
 
 /**
