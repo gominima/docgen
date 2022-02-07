@@ -14,13 +14,13 @@ import (
 
 /**
 	@info The generic data structure extended by other documentation structures
-	@property {string} [Type] The type of the structure
 	@property {string} [Name] The Name of the structure
+	@property {string} [Type] The type of the structure
 	@property {string} [Description] The Description of the structure
 */
 type Data struct {
-	Type        string `json:"Type,omitempty"`
 	Name        string `json:"Name,omitempty"`
+	Type        string `json:"Type,omitempty"`
 	Description string `json:"Description,omitempty"`
 }
 
