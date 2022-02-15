@@ -81,8 +81,8 @@ The docgen format is heavily inspired from the JSDoc format, it however does not
 
 ### Functions
 - `@info` tag to add `Description` in JSON
-- `@param` tag to add a value to the `Parameters` array section
-- `@returns` tag to add `Returns` value in JSON
+- `@param {type} [name] optional description` to add a value to the `Parameters` array section
+- `@returns {type} optional description` to add `Returns` value in JSON
 ```go
 /**
   @info function description
@@ -96,12 +96,12 @@ func someFunc(example string) int {
 
 ### Structures
 - `@info` tag to add `Description` in JSON
-- `@property` tag to add a value to the `Properties` array section
-- Functions on Structures are automatically documented and added to `Functions` array section inside the Structure
+- `@property {type} [name] optional description` to add a value to the `Properties` array section
+- Functions on Structures are automatically added to `Functions` array section inside the Structure if they have comments
 ```go
 /**
   @info structure description
-  @property {string} [str] property description
+  @property {string} [example] property description
 */
 type example struct {
   example string
