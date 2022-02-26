@@ -2,7 +2,7 @@
 	"Meta": {
 		"Generator": "1",
 		"Format": "1",
-		"Date": "2022-01-20 08:49:54.724637265 +0000 UTC m=+0.000159077"
+		"Date": "2022-02-26 07:08:56.206979499 +0000 UTC m=+0.000167828"
 	},
 	"Functions": [
 		{
@@ -11,8 +11,8 @@
 			"Description": "Get all files ending in .go from a directory, recursively",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "root",
+					"Type": "string",
 					"Description": "The root directory"
 				}
 			],
@@ -24,8 +24,8 @@
 			"Description": "Parse the description of a comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "data",
+					"Type": "string",
 					"Description": "The comment"
 				}
 			],
@@ -37,8 +37,8 @@
 			"Description": "Parse the parameter of a function comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "data",
+					"Type": "string",
 					"Description": "The comment"
 				}
 			],
@@ -48,11 +48,11 @@
 			"Name": "ParseExample",
 			"Line": "func ParseExample(data string) string",
 			"Description": "Parse the example of a function comment",
-			"Example": "\t\tpackage main\n\n\t\timport (\n\t\t\t\"fmt\"\n\t\t)\n\n\t\tfunc main() {\n\t\t\tfmt.Println(\"Hello world!\")\n\t\t}\n\t",
+			"Example": "\tpackage main\n\n\timport (\n\t\t\"fmt\"\n\t)\n\n\tfunc main() {\n\t\tfmt.Println(\"Hello world!\")\n\t}\n",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "data",
+					"Type": "string",
 					"Description": "The comment"
 				}
 			],
@@ -64,8 +64,8 @@
 			"Description": "Parse the property of a structure comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "data",
+					"Type": "string",
 					"Description": "The comment"
 				}
 			],
@@ -77,8 +77,8 @@
 			"Description": "Parse the return value of a return comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "data",
+					"Type": "string",
 					"Description": "The comment"
 				}
 			],
@@ -90,13 +90,13 @@
 			"Description": "Parse a single line of a structure comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "line",
+					"Type": "string",
 					"Description": "The line of comment"
 				},
 				{
-					"Type": "StructureData",
 					"Name": "StructureDocs",
+					"Type": "StructureData",
 					"Description": "The Structure Docs"
 				}
 			],
@@ -108,13 +108,13 @@
 			"Description": "Parse a single line of a function comment",
 			"Parameters": [
 				{
-					"Type": "string",
 					"Name": "line",
+					"Type": "string",
 					"Description": "The line of comment"
 				},
 				{
-					"Type": "FunctionData",
 					"Name": "FunctionDocs",
+					"Type": "FunctionData",
 					"Description": "The Function Docs"
 				}
 			],
@@ -128,18 +128,18 @@
 			"Description": "The generic data structure extended by other documentation structures",
 			"Properties": [
 				{
-					"Type": "string",
-					"Name": "Type",
-					"Description": "The type of the structure"
-				},
-				{
-					"Type": "string",
 					"Name": "Name",
+					"Type": "string",
 					"Description": "The Name of the structure"
 				},
 				{
+					"Name": "Type",
 					"Type": "string",
+					"Description": "The type of the structure"
+				},
+				{
 					"Name": "Description",
+					"Type": "string",
 					"Description": "The Description of the structure"
 				}
 			]
@@ -150,23 +150,23 @@
 			"Description": "The function data structure used for functions",
 			"Properties": [
 				{
-					"Type": "string",
 					"Name": "Name",
+					"Type": "string",
 					"Description": "The Name of the function"
 				},
 				{
-					"Type": "string",
 					"Name": "Description",
+					"Type": "string",
 					"Description": "The Description of the function"
 				},
 				{
-					"Type": "[]Data",
 					"Name": "Parameters",
+					"Type": "[]Data",
 					"Description": "The Parameters of the function"
 				},
 				{
-					"Type": "Data",
 					"Name": "Returns",
+					"Type": "Data",
 					"Description": "The Return value of the function"
 				}
 			]
@@ -177,18 +177,18 @@
 			"Description": "The structure data structure used for structures",
 			"Properties": [
 				{
-					"Type": "string",
 					"Name": "Name",
+					"Type": "string",
 					"Description": "The Name of the structure"
 				},
 				{
-					"Type": "string",
 					"Name": "Description",
+					"Type": "string",
 					"Description": "The Description of the structure"
 				},
 				{
-					"Type": "[]Data",
 					"Name": "Properties",
+					"Type": "[]Data",
 					"Description": "The properties of the structure"
 				}
 			]
@@ -199,18 +199,18 @@
 			"Description": "The general meta information of the documentation",
 			"Properties": [
 				{
-					"Type": "string",
 					"Name": "Generator",
+					"Type": "string",
 					"Description": "The Name of the structure"
 				},
 				{
-					"Type": "string",
 					"Name": "Format",
+					"Type": "string",
 					"Description": "The Description of the structure"
 				},
 				{
-					"Type": "string",
 					"Name": "Date",
+					"Type": "string",
 					"Description": "The properties of the structure"
 				}
 			]
@@ -221,18 +221,18 @@
 			"Description": "The DocgenData used to make the docs JSON",
 			"Properties": [
 				{
-					"Type": "Meta",
 					"Name": "Meta",
+					"Type": "Meta",
 					"Description": "The general meta information of the documentation"
 				},
 				{
-					"Type": "[]FunctionData",
 					"Name": "Functions",
+					"Type": "[]FunctionData",
 					"Description": "The Functions of the project"
 				},
 				{
-					"Type": "[]StructureData",
 					"Name": "Date",
+					"Type": "[]StructureData",
 					"Description": "The Structures of the project"
 				}
 			]
