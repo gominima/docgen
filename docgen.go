@@ -176,9 +176,9 @@ func ParseFunction(line string, FunctionDocs FunctionData) (FunctionData, string
 	FunctionDocs.Line = Trim(Remove(line, "{"))
 	array := Split(FunctionDocs.Line, " ")
 	if IsFunctionOfStructureLine(line) {
-		FunctionDocs.Name = Remove(Remove(array[2], "*"), ")")
-		name = FunctionDocs.Name
-	} else if IsFunctionLine(line) {
+		name = Remove(Remove(array[2], "*"), ")")
+	}
+        if IsFunctionLine(line) {
 		for _, word := range array {
 			if IsFunctionLine(word) {
 				continue
