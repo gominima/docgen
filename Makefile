@@ -7,7 +7,7 @@ say_version:
 
 build:
 	@echo "Building..."
-	go build docgen.go
+	go build *.go
 
 test:
 	@echo "Testing..."

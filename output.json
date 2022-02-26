@@ -2,7 +2,7 @@
 	"Meta": {
 		"Generator": "1",
 		"Format": "1",
-		"Date": "2022-02-26 07:08:56.206979499 +0000 UTC m=+0.000167828"
+		"Date": "2022-02-26 11:06:09.33491109 +0000 UTC m=+0.000186338"
 	},
 	"Functions": [
 		{
@@ -26,7 +26,7 @@
 				{
 					"Name": "data",
 					"Type": "string",
-					"Description": "The comment"
+					"Description": "The comment to parse"
 				}
 			],
 			"Returns": {}
@@ -39,21 +39,7 @@
 				{
 					"Name": "data",
 					"Type": "string",
-					"Description": "The comment"
-				}
-			],
-			"Returns": {}
-		},
-		{
-			"Name": "ParseExample",
-			"Line": "func ParseExample(data string) string",
-			"Description": "Parse the example of a function comment",
-			"Example": "\tpackage main\n\n\timport (\n\t\t\"fmt\"\n\t)\n\n\tfunc main() {\n\t\tfmt.Println(\"Hello world!\")\n\t}\n",
-			"Parameters": [
-				{
-					"Name": "data",
-					"Type": "string",
-					"Description": "The comment"
+					"Description": "The comment to parse"
 				}
 			],
 			"Returns": {}
@@ -66,7 +52,7 @@
 				{
 					"Name": "data",
 					"Type": "string",
-					"Description": "The comment"
+					"Description": "The comment to parse"
 				}
 			],
 			"Returns": {}
@@ -79,7 +65,7 @@
 				{
 					"Name": "data",
 					"Type": "string",
-					"Description": "The comment"
+					"Description": "The comment to parse"
 				}
 			],
 			"Returns": {}
@@ -92,19 +78,19 @@
 				{
 					"Name": "line",
 					"Type": "string",
-					"Description": "The line of comment"
+					"Description": "The comment to parse"
 				},
 				{
 					"Name": "StructureDocs",
 					"Type": "StructureData",
-					"Description": "The Structure Docs"
+					"Description": "The Structure Docs for adding data"
 				}
 			],
 			"Returns": {}
 		},
 		{
 			"Name": "ParseFunction",
-			"Line": "func ParseFunction(line string, FunctionDocs FunctionData) FunctionData",
+			"Line": "func ParseFunction(line string, FunctionDocs FunctionData) (FunctionData, string)",
 			"Description": "Parse a single line of a function comment",
 			"Parameters": [
 				{
@@ -115,10 +101,222 @@
 				{
 					"Name": "FunctionDocs",
 					"Type": "FunctionData",
-					"Description": "The Function Docs"
+					"Description": "The Function Docs for adding data"
 				}
 			],
 			"Returns": {}
+		},
+		{
+			"Name": "GetType",
+			"Line": "func GetType(line string) (string, string)",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to parse"
+				}
+			],
+			"Returns": {
+				"Type": "string,string"
+			}
+		},
+		{
+			"Name": "GetName",
+			"Line": "func GetName(line string) (string, string)",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to parse"
+				}
+			],
+			"Returns": {
+				"Type": "string,string"
+			}
+		},
+		{
+			"Name": "Split",
+			"Line": "func Split(line string, seperator string) []string",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to split"
+				},
+				{
+					"Name": "seperator",
+					"Type": "string",
+					"Description": "The seperator to split line with"
+				}
+			],
+			"Returns": {
+				"Type": "[]string"
+			}
+		},
+		{
+			"Name": "StartsWith",
+			"Line": "func StartsWith(line string, prefix string) bool",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to check"
+				},
+				{
+					"Name": "prefix",
+					"Type": "string",
+					"Description": "The prefix to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
+		},
+		{
+			"Name": "EndsWith",
+			"Line": "func EndsWith(line string, suffix string) bool",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to check"
+				},
+				{
+					"Name": "suffix",
+					"Type": "string",
+					"Description": "The suffix to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
+		},
+		{
+			"Name": "Replace",
+			"Line": "func Replace(line string, replace string, with string) string",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to replace the word in"
+				},
+				{
+					"Name": "replace",
+					"Type": "string",
+					"Description": "The word to replace"
+				},
+				{
+					"Name": "with",
+					"Type": "string",
+					"Description": "The word to replace with"
+				}
+			],
+			"Returns": {
+				"Type": "string"
+			}
+		},
+		{
+			"Name": "Remove",
+			"Line": "func Remove(line string, remove string) string",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to replace the word in"
+				},
+				{
+					"Name": "replace",
+					"Type": "string",
+					"Description": "The word to remove"
+				}
+			],
+			"Returns": {
+				"Type": "string"
+			}
+		},
+		{
+			"Name": "Trim",
+			"Line": "func Trim(line string) string",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The comment line to trim"
+				}
+			],
+			"Returns": {
+				"Type": "string"
+			}
+		},
+		{
+			"Name": "IsFunctionLine",
+			"Line": "func IsFunctionLine(data string) bool",
+			"Parameters": [
+				{
+					"Name": "data",
+					"Type": "string",
+					"Description": "The comment line to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
+		},
+		{
+			"Name": "IsStructureLine",
+			"Line": "func IsStructureLine(data string) bool",
+			"Parameters": [
+				{
+					"Name": "data",
+					"Type": "string",
+					"Description": "The comment line to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
+		},
+		{
+			"Name": "IsFunctionOfStructureLine",
+			"Line": "func IsFunctionOfStructureLine(data string) bool",
+			"Parameters": [
+				{
+					"Name": "data",
+					"Type": "string",
+					"Description": "The comment to check"
+				}
+			],
+			"Returns": {
+				"Type": "string"
+			}
+		},
+		{
+			"Name": "IsFunction",
+			"Line": "func IsFunction(data string) bool",
+			"Parameters": [
+				{
+					"Name": "data",
+					"Type": "string",
+					"Description": "The comment to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
+		},
+		{
+			"Name": "IsStructure",
+			"Line": "func IsStructure(data string) bool",
+			"Parameters": [
+				{
+					"Name": "data",
+					"Type": "string",
+					"Description": "The comment to check"
+				}
+			],
+			"Returns": {
+				"Type": "bool"
+			}
 		}
 	],
 	"Structures": [
