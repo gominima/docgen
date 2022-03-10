@@ -167,6 +167,30 @@ func ParseStructure(line string, StructureDocs StructureData) StructureData {
 }
 
 /**
+ * @info Parse name of a function
+ * @param {string} [line] The line of comment
+ * @param {FunctionData} [FunctionDocs] The Function Docs for adding data
+ */
+func ParseFunctionName(line string, FunctionDocs FunctionData) FunctionData {
+	array := Split(FunctionDocs.Line, " ")
+	for _, word := range array {
+		if IsFunctionLine(word) {
+			continue
+		}
+		if EndsWith(word, "()") {
+			FunctionDocs.Name = Remove(word, "()")
+			break
+		}
+		if StartsWith(word, "(") || EndsWith(word, ")") {
+			continue
+		}
+		FunctionDocs.Name = Split(word, "(")[0]
+		break
+	}
+	return FunctionDocs
+}
+
+/**
  * @info Parse a single line of a function comment
  * @param {string} [line] The line of comment
  * @param {FunctionData} [FunctionDocs] The Function Docs for adding data
@@ -174,21 +198,12 @@ func ParseStructure(line string, StructureDocs StructureData) StructureData {
 func ParseFunction(line string, FunctionDocs FunctionData) (FunctionData, string) {
 	line, name := Trim(line), ""
 	FunctionDocs.Line = Trim(Remove(line, "{"))
-	array := Split(FunctionDocs.Line, " ")
 	if IsFunctionOfStructureLine(line) {
-		FunctionDocs.Name = Remove(Remove(array[2], "*"), ")")
+		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
 		name = FunctionDocs.Name
+		println(name)
 	} else if IsFunctionLine(line) {
-		for _, word := range array {
-			if IsFunctionLine(word) {
-				continue
-			}
-			if StartsWith(word, "(") || EndsWith(word, ")") {
-				continue
-			}
-			FunctionDocs.Name = Split(word, "(")[0]
-			break
-		}
+		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
 	}
 	if StartsWith(line, "* @info") {
 		FunctionDocs.Description = ParseDescription(line)

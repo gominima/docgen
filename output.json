@@ -2,7 +2,7 @@
 	"Meta": {
 		"Generator": "1",
 		"Format": "1",
-		"Date": "2022-02-26 11:06:09.33491109 +0000 UTC m=+0.000186338"
+		"Date": "2022-03-10 03:57:53.804889897 +0000 UTC m=+0.000218282"
 	},
 	"Functions": [
 		{
@@ -84,6 +84,24 @@
 					"Name": "StructureDocs",
 					"Type": "StructureData",
 					"Description": "The Structure Docs for adding data"
+				}
+			],
+			"Returns": {}
+		},
+		{
+			"Name": "ParseFunctionName",
+			"Line": "func ParseFunctionName(line string, FunctionDocs FunctionData) FunctionData",
+			"Description": "Parse name of a function",
+			"Parameters": [
+				{
+					"Name": "line",
+					"Type": "string",
+					"Description": "The line of comment"
+				},
+				{
+					"Name": "FunctionDocs",
+					"Type": "FunctionData",
+					"Description": "The Function Docs for adding data"
 				}
 			],
 			"Returns": {}
