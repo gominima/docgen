@@ -201,7 +201,6 @@ func ParseFunction(line string, FunctionDocs FunctionData) (FunctionData, string
 	if IsFunctionOfStructureLine(line) {
 		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
 		name = FunctionDocs.Name
-		println(name)
 	} else if IsFunctionLine(line) {
 		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
 	}
