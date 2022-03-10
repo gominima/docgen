@@ -200,7 +200,7 @@ func ParseFunction(line string, FunctionDocs FunctionData) (FunctionData, string
 	FunctionDocs.Line = Trim(Remove(line, "{"))
 	if IsFunctionOfStructureLine(line) {
 		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
-		name = FunctionDocs.Name
+		name = Remove(Remove(Split(FunctionDocs.Line, " ")[2], "*"), ")")
 	} else if IsFunctionLine(line) {
 		FunctionDocs = ParseFunctionName(FunctionDocs.Line, FunctionDocs)
 	}
